@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QString>
+#include <QFile>
 
 namespace Ui {
 class MainWindow;
@@ -17,6 +19,9 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    const QString requestTemplate = "https://yandex.ru/images/search?text=";
+    QString reguest = "кот";
+    QFile htmlFile;
 };
 
 #endif // MAINWINDOW_H
