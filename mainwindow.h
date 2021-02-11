@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QString>
 #include <QFile>
+#include "downloader.h"
 
 namespace Ui {
 class MainWindow;
@@ -20,8 +21,13 @@ public:
 private:
     Ui::MainWindow *ui;
     const QString requestTemplate = "https://yandex.ru/images/search?text=";
-    QString reguest = "кот";
+    QString request = "кот";
     QFile htmlFile;
+
+    Downloader *loader;
+
+private slots:
+    void slotDone(const QUrl& url, const QByteArray&);
 };
 
 #endif // MAINWINDOW_H
