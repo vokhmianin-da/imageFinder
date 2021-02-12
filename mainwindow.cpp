@@ -40,26 +40,30 @@ void MainWindow::on_pushButton_clicked()    //вывод картинок
     if(htmlFile.open(QIODevice::ReadOnly))
     {
         temp = stream.readAll();
-//        // Проверить регулярку можно на сайте: https://regex101.com
-//        QRegExp regex("<img([^(src)]+)src=\"([^(\")]+)\""); //
-//        int lastPos = 0;
-//        while( ( lastPos = regex.indexIn( temp, lastPos ) ) != -1 ) {
-//            lastPos += regex.matchedLength();
-//            list.append(regex.cap(2));
-//        }
-       temp1 = getString(temp,"<img class=", ">");
-       list.append(temp1);
-       int x = temp.indexOf(temp1);
+        htmlFile.close();
+        // Проверить регулярку можно на сайте: https://regex101.com
+        QRegExp regex("<img([^(src)]+)src=\"([^(\")]+)\""); //
+        int lastPos = 0;
+        while( ( lastPos = regex.indexIn( temp, lastPos ) ) != -1 ) {
+            lastPos += regex.matchedLength();
+            list.append(regex.cap(2));
+        }
+//       temp1 = getString(temp,"<img class=", ">");
+//       list.append(temp1);
+//       int x = temp.indexOf(temp1);
 
-       temp1 = getString(temp1,"<img class=", ">", x);
-       list.append(temp1);
-       x = temp.indexOf(temp1);
+//       temp1 = getString(temp1,"<img class=", ">", x);
+//       list.append(temp1);
+//       x = temp.indexOf(temp1);
 
-       temp1 = getString(temp1,"<img class=", ">", x);
-       list.append(temp1);
-       x = temp.indexOf(temp1);
+//       temp1 = getString(temp1,"<img class=", ">", x);
+//       list.append(temp1);
+//       x = temp.indexOf(temp1);
 
-       ui->label1->setText(list[0]);
+//       ui->label1->setText(list[0]);
+        loader->download(list[0]);
+        QPixmap pict("htmlFile.txt");
+        ui->label1->setPixmap(pict);
 
     }
 }
