@@ -1,5 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QStringList>
+#include <QRegExp>
+#include <QTextStream>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -28,3 +31,52 @@ void MainWindow::slotDone(const QUrl &url, const QByteArray &ba)
         htmlFile.close();
     }
 }
+
+void MainWindow::on_pushButton_clicked()    //вывод картинок
+{
+    QString temp, temp1;
+    QTextStream stream(&htmlFile);
+    QStringList list;
+    if(htmlFile.open(QIODevice::ReadOnly))
+    {
+        temp = stream.readAll();
+//        // Проверить регулярку можно на сайте: https://regex101.com
+//        QRegExp regex("<img([^(src)]+)src=\"([^(\")]+)\""); //
+//        int lastPos = 0;
+//        while( ( lastPos = regex.indexIn( temp, lastPos ) ) != -1 ) {
+//            lastPos += regex.matchedLength();
+//            list.append(regex.cap(2));
+//        }
+       temp1 = getString(temp,"<img class=", ">");
+       list.append(temp1);
+       int x = temp.indexOf(temp1);
+
+       temp1 = getString(temp1,"<img class=", ">", x);
+       list.append(temp1);
+       x = temp.indexOf(temp1);
+
+       temp1 = getString(temp1,"<img class=", ">", x);
+       list.append(temp1);
+       x = temp.indexOf(temp1);
+
+       ui->label1->setText(list[0]);
+
+    }
+}
+
+QString MainWindow::getString(QString& originalStr,const QString& frontStr, const QString& endStr, int begin)
+{
+    int indFrontStr;
+    int indEndStr;
+    QString temp;
+
+    indFrontStr = originalStr.indexOf(frontStr, begin);  //начало искомой строки
+    indEndStr = originalStr.indexOf(endStr, indFrontStr);   //конец искомой строки
+    temp = originalStr.mid(indFrontStr + frontStr.size(), indEndStr - (indFrontStr + frontStr.size()));
+    indFrontStr = temp.indexOf("src=\"");  //начало искомой строки
+    indEndStr = temp.lastIndexOf("\"", indFrontStr);   //конец искомой строки
+    temp = temp.mid(indFrontStr + frontStr.size(), indEndStr - (indFrontStr + frontStr.size()));
+    return temp;
+
+}
+

@@ -25,9 +25,11 @@ private:
     QFile htmlFile;
 
     Downloader *loader;
+    QString getString(QString& originalStr,const QString& frontStr, const QString& endStr, int begin = 0);
 
 private slots:
     void slotDone(const QUrl& url, const QByteArray&);
+    void on_pushButton_clicked();
 };
 
 #endif // MAINWINDOW_H
