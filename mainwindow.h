@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QString>
 #include <QFile>
+#include <QLabel>
 #include "downloader.h"
 
 namespace Ui {
@@ -14,10 +15,6 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
-public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
-
 private:
     Ui::MainWindow *ui;
     const QString requestTemplate = "https://yandex.ru/images/search?text=";
@@ -25,11 +22,19 @@ private:
     QFile htmlFile;
 
     Downloader *loader;
-    QString getString(QString& originalStr,const QString& frontStr, const QString& endStr, int begin = 0);
+signals:
+    void reassignment();
 
 private slots:
-    void slotDone(const QUrl& url, const QByteArray&);
+    void slotDone(const QUrl& url, const QByteArray&);    
     void on_pushButton_clicked();
+    void slotReassignment();
+    void slotNewPicture(const QUrl& url, const QByteArray&);
+
+public:
+    explicit MainWindow(QWidget *parent = 0);
+    void showPic(const QString &path, QLabel* label);
+    ~MainWindow();
 };
 
 #endif // MAINWINDOW_H

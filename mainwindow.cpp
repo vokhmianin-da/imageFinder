@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QString temp = requestTemplate + request;
     connect(loader, SIGNAL(done(const QUrl&, const QByteArray&)),
             this, SLOT(slotDone(const QUrl&, const QByteArray&)));
+    connect(this, SIGNAL(reassignment()), this, SLOT(slotReassignment()));
     loader->download(temp);
 }
 
@@ -32,8 +33,19 @@ void MainWindow::slotDone(const QUrl &url, const QByteArray &ba)
     }
 }
 
+void MainWindow::slotNewPicture(const QUrl &url, const QByteArray &ba)
+{
+    htmlFile.setFileName("pict.jpg");
+    if(htmlFile.open(QIODevice::WriteOnly))
+    {
+        htmlFile.write(ba);
+        htmlFile.close();
+    }
+}
+
 void MainWindow::on_pushButton_clicked()    //вывод картинок
 {
+    emit reassignment();
     QString temp;
     QTextStream stream(&htmlFile);
     QStringList list;
@@ -47,27 +59,35 @@ void MainWindow::on_pushButton_clicked()    //вывод картинок
 //        QRegExp regex("(<img.*?src=\")([^\"]+)(\")"); //regex("<img([^(src)]+)src=\"([^(\")]+)\"")
         QRegExp regex("<img class=\"[^\"]+\" alt=\"[^\"]*\"[^\"]+\"[^\"]+\" src=\"([^\"]+)\"");
         int lastPos = 0;
-        while( ( lastPos = regex.indexIn( temp, lastPos ) ) != -1 ) {
+        int index = 0;
+        while( ( lastPos = regex.indexIn( temp, lastPos ) ) != -1 && index < 3) {
             lastPos += regex.matchedLength();
             list.append(regex.cap(1));
-        }
-
+            index++;
+        }        
+            loader->download(list[0]);
+            showPic(htmlFile.fileName(), ui->label1);
+            loader->download(list[1]);
+            showPic(htmlFile.fileName(), ui->label2);
+            loader->download(list[2]);
+            showPic(htmlFile.fileName(), ui->label3);
     }
 }
 
-QString MainWindow::getString(QString& originalStr,const QString& frontStr, const QString& endStr, int begin)
+void MainWindow::slotReassignment() //новое соединение сигналов и слотов
 {
-    int indFrontStr;
-    int indEndStr;
-    QString temp;
+    disconnect(loader, SIGNAL(done(const QUrl&, const QByteArray&)),
+            this, SLOT(slotDone(const QUrl&, const QByteArray&)));
 
-    indFrontStr = originalStr.indexOf(frontStr, begin);  //начало искомой строки
-    indEndStr = originalStr.indexOf(endStr, indFrontStr);   //конец искомой строки
-    temp = originalStr.mid(indFrontStr + frontStr.size(), indEndStr - (indFrontStr + frontStr.size()));
-    indFrontStr = temp.indexOf("src=\"");  //начало искомой строки
-    indEndStr = temp.lastIndexOf("\"", indFrontStr);   //конец искомой строки
-    temp = temp.mid(indFrontStr + frontStr.size(), indEndStr - (indFrontStr + frontStr.size()));
-    return temp;
-
+    connect(loader, SIGNAL(done(const QUrl&, const QByteArray&)),
+            this, SLOT(slotNewPicture(const QUrl&, const QByteArray&)));
 }
 
+void MainWindow::showPic(const QString &path, QLabel* label)
+{
+    QPixmap pix(path);
+    pix = pix.scaled(500, 400, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    label->setPixmap(pix);
+    label->setFixedSize(pix.size());
+    label->show();
+}
