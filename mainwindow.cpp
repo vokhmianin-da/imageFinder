@@ -42,11 +42,11 @@ void MainWindow::on_pushButton_clicked()    //вывод картинок
         temp = stream.readAll();
         htmlFile.close();
         // Проверить регулярку можно на сайте: https://regex101.com
-        QRegExp regex("<img.*src=\"([^\"]+)\""); //regex("<img([^(src)]+)src=\"([^(\")]+)\"")
+        QRegExp regex("(<img.*src=\")([^\"]+)(\")"); //regex("<img([^(src)]+)src=\"([^(\")]+)\"")  regex("(<img[^s]*src=\")([^\"]+)(\")")
         int lastPos = 0;
         while( ( lastPos = regex.indexIn( temp, lastPos ) ) != -1 ) {
             lastPos += regex.matchedLength();
-            list.append(regex.cap(1));
+            list.append(regex.cap(2));
         }
 //       temp1 = getString(temp,"<img class=", ">");
 //       list.append(temp1);
