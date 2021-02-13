@@ -34,7 +34,7 @@ void MainWindow::slotDone(const QUrl &url, const QByteArray &ba)
 
 void MainWindow::on_pushButton_clicked()    //вывод картинок
 {
-    QString temp, temp1;
+    QString temp;
     QTextStream stream(&htmlFile);
     QStringList list;
     if(htmlFile.open(QIODevice::ReadOnly))
@@ -42,32 +42,15 @@ void MainWindow::on_pushButton_clicked()    //вывод картинок
         temp = stream.readAll();
         htmlFile.close();
         // Проверить регулярку можно на сайте: https://regex101.com
-        QRegExp regex("(<img.*src=\")([^\"]+)(\")"); //regex("<img([^(src)]+)src=\"([^(\")]+)\"")  regex("(<img[^s]*src=\")([^\"]+)(\")")
+
+//        <img class="related__thumb" alt="" data-error-handler="wizardThumbError:2" src="//im0-tub-ru.yandex.net/i?id=735d3bcb5413fde4f60e0dcd70b3fd2c&amp;n=11&amp;ref=rq">
+//        QRegExp regex("(<img.*?src=\")([^\"]+)(\")"); //regex("<img([^(src)]+)src=\"([^(\")]+)\"")
+        QRegExp regex("<img class=\"[^\"]+\" alt=\"[^\"]*\"[^\"]+\"[^\"]+\" src=\"([^\"]+)\"");
         int lastPos = 0;
         while( ( lastPos = regex.indexIn( temp, lastPos ) ) != -1 ) {
             lastPos += regex.matchedLength();
-            list.append(regex.cap(2));
+            list.append(regex.cap(1));
         }
-//       temp1 = getString(temp,"<img class=", ">");
-//       list.append(temp1);
-//       int x = temp.indexOf(temp1);
-
-//       temp1 = getString(temp1,"<img class=", ">", x);
-//       list.append(temp1);
-//       x = temp.indexOf(temp1);
-
-//       temp1 = getString(temp1,"<img class=", ">", x);
-//       list.append(temp1);
-//       x = temp.indexOf(temp1);
-
-//       ui->label1->setText(list[0]);
-        temp = "//im0-tub-ru.yandex.net/i?id=420ae0d7f3620a053d7030b8c23f9c78&amp;n=13";
-        loader->download(temp);
-        QPixmap pict("htmlFile.txt");
-        pict = pict.scaled(500, 400, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-        ui->label1->setPixmap(pict);
-        ui->label1->setFixedSize(pict.size());
-        ui->label1->setPixmap(pict);
 
     }
 }
