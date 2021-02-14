@@ -20,6 +20,7 @@ private:
     const QString requestTemplate = "https://yandex.ru/images/search?text=";
     QString request = "кот";
     QFile htmlFile;
+    QFile pictFile;
 
     Downloader *loader;
 signals:
