@@ -14,6 +14,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(loader, SIGNAL(done(const QUrl&, const QByteArray&)),
             this, SLOT(slotDone(const QUrl&, const QByteArray&)));
+    connect(loader, SIGNAL(downloadProgress(qint64, qint64)),
+            this, SLOT(slotDownloadProgress(qint64, qint64)));
     connect(this, SIGNAL(reassignment()), this, SLOT(slotReassignment()));
     connect(this, SIGNAL(assignment()), this, SLOT(slotAssignment()));
 
