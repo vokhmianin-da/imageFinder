@@ -30,6 +30,7 @@ void MainWindow::slotDone(const QUrl &url, const QByteArray &ba)
 {
     Q_UNUSED(url);
     htmlFile.setFileName("htmlFile.txt");
+    htmlFile.remove();
     if(htmlFile.open(QIODevice::WriteOnly))
     {
         htmlFile.write(ba);
@@ -50,6 +51,7 @@ void MainWindow::slotNewPicture(const QUrl &url, const QByteArray &ba)
     switch(n){
     case 0:
         pictFile.setFileName("pict1.jpg");
+        pictFile.remove();
         if(pictFile.open(QIODevice::WriteOnly))
         {
             pictFile.write(ba);
@@ -59,6 +61,7 @@ void MainWindow::slotNewPicture(const QUrl &url, const QByteArray &ba)
         break;
     case 1:
         pictFile.setFileName("pict2.jpg");
+        pictFile.remove();
         if(pictFile.open(QIODevice::WriteOnly))
         {
             pictFile.write(ba);
@@ -68,6 +71,7 @@ void MainWindow::slotNewPicture(const QUrl &url, const QByteArray &ba)
         break;
     case 2:
         pictFile.setFileName("pict3.jpg");
+        pictFile.remove();
         if(pictFile.open(QIODevice::WriteOnly))
         {
             pictFile.write(ba);
@@ -82,6 +86,11 @@ void MainWindow::slotNewPicture(const QUrl &url, const QByteArray &ba)
 
 void MainWindow::on_pushButton_clicked()    //вывод картинок
 {
+    if(htmlFile.fileName().isEmpty())
+    {
+        ui->errorLabel->setText("Введите имя запроса");
+        return;
+    }
     emit reassignment();
     QString temp;
     QTextStream stream(&htmlFile);
@@ -155,6 +164,15 @@ void MainWindow::showPic(const QString &path, QLabel* label)
 
 void MainWindow::on_pushButtonSearch_clicked()  //установка имени запроса
 {
+    if(ui->requestName->text().isEmpty())
+    {
+        ui->errorLabel->setText("Введите имя запроса");
+        return;
+    }
+    else
+    {
+       ui->errorLabel->clear();    //имя установлено
+    }
     emit assignment();
     request = ui->requestName->text();
 
