@@ -39,12 +39,20 @@ void MainWindow::slotDone(const QUrl &url, const QByteArray &ba)
 
 void MainWindow::slotNewPicture(const QUrl &url, const QByteArray &ba)
 {
-    //htmlFile.setFileName("pict.jpg");
+    static int n = 0;
+    pictFile.setFileName(url.path().section('/', -1));
     if(pictFile.open(QIODevice::WriteOnly))
     {
         pictFile.write(ba);
         pictFile.close();
     }
+    switch(n){
+    case 0: showPic(pictFile.fileName(), ui->label1); break;
+    case 1: showPic(pictFile.fileName(), ui->label2); break;
+    case 2: showPic(pictFile.fileName(), ui->label3); break;
+    default: n = -1; break;
+    }
+        n++;
 }
 
 void MainWindow::on_pushButton_clicked()    //вывод картинок
@@ -70,17 +78,17 @@ void MainWindow::on_pushButton_clicked()    //вывод картинок
             index++;
         }
         QString str1 = "http:" + list[0];
-        pictFile.setFileName("pict1.jpg");
+        //pictFile.setFileName("pict1.jpg");
             loader->download(str1);
-            showPic(pictFile.fileName(), ui->label1);
+           // showPic(pictFile.fileName(), ui->label1);
             str1 = "http:" + list[1];
-            pictFile.setFileName("pict2.jpg");
+         //   pictFile.setFileName("pict2.jpg");
             loader->download(str1);
-            showPic(pictFile.fileName(), ui->label2);
+           // showPic(pictFile.fileName(), ui->label2);
             str1 = "http:" + list[2];
-            pictFile.setFileName("pict3.jpg");
+          //  pictFile.setFileName("pict3.jpg");
             loader->download(str1);
-            showPic(pictFile.fileName(), ui->label3);
+           // showPic(pictFile.fileName(), ui->label3);
     }
 }
 
