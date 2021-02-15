@@ -12,8 +12,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     loader = new Downloader;
 
-    connect(loader, SIGNAL(done(const QUrl&, const QByteArray&)),
-            this, SLOT(slotDone(const QUrl&, const QByteArray&)));
+    //    connect(loader, SIGNAL(done(const QUrl&, const QByteArray&)),
+    //            this, SLOT(slotDone(const QUrl&, const QByteArray&)));
     connect(loader, SIGNAL(downloadProgress(qint64, qint64)),
             this, SLOT(slotDownloadProgress(qint64, qint64)));
     connect(this, SIGNAL(reassignment()), this, SLOT(slotReassignment()));
@@ -28,7 +28,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::slotDone(const QUrl &url, const QByteArray &ba)
 {
-
+    Q_UNUSED(url);
     htmlFile.setFileName("htmlFile.txt");
     if(htmlFile.open(QIODevice::WriteOnly))
     {
@@ -39,13 +39,14 @@ void MainWindow::slotDone(const QUrl &url, const QByteArray &ba)
 
 void MainWindow::slotNewPicture(const QUrl &url, const QByteArray &ba)
 {
+    Q_UNUSED(url);
     static int n = 0;
-//    pictFile.setFileName(url.path().section('/', -1));
-//    if(pictFile.open(QIODevice::WriteOnly))
-//    {
-//        pictFile.write(ba);
-//        pictFile.close();
-//    }
+    //    pictFile.setFileName(url.path().section('/', -1));
+    //    if(pictFile.open(QIODevice::WriteOnly))
+    //    {
+    //        pictFile.write(ba);
+    //        pictFile.close();
+    //    }
     switch(n){
     case 0:
         pictFile.setFileName("pict1.jpg");
@@ -76,7 +77,7 @@ void MainWindow::slotNewPicture(const QUrl &url, const QByteArray &ba)
         break;
     default: n = -1; break;
     }
-        n++;
+    n++;
 }
 
 void MainWindow::on_pushButton_clicked()    //вывод картинок
@@ -91,8 +92,8 @@ void MainWindow::on_pushButton_clicked()    //вывод картинок
         htmlFile.close();
         // Проверить регулярку можно на сайте: https://regex101.com
 
-//        <img class="related__thumb" alt="" data-error-handler="wizardThumbError:2" src="//im0-tub-ru.yandex.net/i?id=735d3bcb5413fde4f60e0dcd70b3fd2c&amp;n=11&amp;ref=rq">
-//        QRegExp regex("(<img.*?src=\")([^\"]+)(\")"); //regex("<img([^(src)]+)src=\"([^(\")]+)\"")
+        //        <img class="related__thumb" alt="" data-error-handler="wizardThumbError:2" src="//im0-tub-ru.yandex.net/i?id=735d3bcb5413fde4f60e0dcd70b3fd2c&amp;n=11&amp;ref=rq">
+        //        QRegExp regex("(<img.*?src=\")([^\"]+)(\")"); //regex("<img([^(src)]+)src=\"([^(\")]+)\"")
         QRegExp regex("<img class=\"[^\"]+\" alt=\"[^\"]*\"[^\"]+\"[^\"]+\" src=\"([^\"]+);n");
         int lastPos = 0;
         int index = 0;
@@ -102,11 +103,11 @@ void MainWindow::on_pushButton_clicked()    //вывод картинок
             index++;
         }
         QString str1 = "http:" + list[0];
-            loader->download(str1);
-            str1 = "http:" + list[1];
-            loader->download(str1);
-            str1 = "http:" + list[2];
-            loader->download(str1);
+        loader->download(str1);
+        str1 = "http:" + list[1];
+        loader->download(str1);
+        str1 = "http:" + list[2];
+        loader->download(str1);
     }
 }
 
@@ -129,7 +130,7 @@ void MainWindow::slotError()
 void MainWindow::slotReassignment() //новое соединение сигналов и слотов
 {
     disconnect(loader, SIGNAL(done(const QUrl&, const QByteArray&)),
-            this, SLOT(slotDone(const QUrl&, const QByteArray&)));
+               this, SLOT(slotDone(const QUrl&, const QByteArray&)));
 
     connect(loader, SIGNAL(done(const QUrl&, const QByteArray&)),
             this, SLOT(slotNewPicture(const QUrl&, const QByteArray&)));
@@ -138,7 +139,7 @@ void MainWindow::slotReassignment() //новое соединение сигна
 void MainWindow::slotAssignment()
 {
     disconnect(loader, SIGNAL(done(const QUrl&, const QByteArray&)),
-            this, SLOT(slotNewPicture(const QUrl&, const QByteArray&)));
+               this, SLOT(slotNewPicture(const QUrl&, const QByteArray&)));
     connect(loader, SIGNAL(done(const QUrl&, const QByteArray&)),
             this, SLOT(slotDone(const QUrl&, const QByteArray&)));
 }
