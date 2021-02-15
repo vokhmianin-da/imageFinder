@@ -25,12 +25,18 @@ private:
     Downloader *loader;
 signals:
     void reassignment();
+    void assignment();
 
 private slots:
     void slotDone(const QUrl& url, const QByteArray&);    
     void on_pushButton_clicked();
     void slotReassignment();
+    void slotAssignment();
     void slotNewPicture(const QUrl& url, const QByteArray&);
+    void slotDownloadProgress(qint64, qint64);
+    void slotError();
+
+    void on_pushButtonSearch_clicked();
 
 public:
     explicit MainWindow(QWidget *parent = 0);

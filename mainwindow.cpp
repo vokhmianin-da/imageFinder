@@ -3,6 +3,7 @@
 #include <QStringList>
 #include <QRegExp>
 #include <QTextStream>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -10,11 +11,12 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     loader = new Downloader;
-    QString temp = requestTemplate + request;
+
     connect(loader, SIGNAL(done(const QUrl&, const QByteArray&)),
             this, SLOT(slotDone(const QUrl&, const QByteArray&)));
     connect(this, SIGNAL(reassignment()), this, SLOT(slotReassignment()));
-    loader->download(temp);
+    connect(this, SIGNAL(assignment()), this, SLOT(slotAssignment()));
+
 }
 
 MainWindow::~MainWindow()
@@ -80,6 +82,22 @@ void MainWindow::on_pushButton_clicked()    //вывод картинок
     }
 }
 
+void MainWindow::slotDownloadProgress(qint64 received, qint64 total)
+{
+    //Странная хрень творится с размером
+    if (total <=0){
+        slotError();
+        return;
+    }
+
+    ui->pbar->setValue(100 * received / total);
+}
+
+void MainWindow::slotError()
+{
+    QMessageBox::critical(this, "Error", "An error while download is occured");
+}
+
 void MainWindow::slotReassignment() //новое соединение сигналов и слотов
 {
     disconnect(loader, SIGNAL(done(const QUrl&, const QByteArray&)),
@@ -89,6 +107,14 @@ void MainWindow::slotReassignment() //новое соединение сигна
             this, SLOT(slotNewPicture(const QUrl&, const QByteArray&)));
 }
 
+void MainWindow::slotAssignment()
+{
+    disconnect(loader, SIGNAL(done(const QUrl&, const QByteArray&)),
+            this, SLOT(slotNewPicture(const QUrl&, const QByteArray&)));
+    connect(loader, SIGNAL(done(const QUrl&, const QByteArray&)),
+            this, SLOT(slotDone(const QUrl&, const QByteArray&)));
+}
+
 void MainWindow::showPic(const QString &path, QLabel* label)
 {
     QPixmap pix(path);
@@ -96,4 +122,14 @@ void MainWindow::showPic(const QString &path, QLabel* label)
     label->setPixmap(pix);
     label->setFixedSize(pix.size());
     label->show();
+}
+
+void MainWindow::on_pushButtonSearch_clicked()  //установка имени запроса
+{
+    emit assignment();
+    request = ui->requestName->text();
+
+    QString temp = requestTemplate + request;
+
+    loader->download(temp);
 }
