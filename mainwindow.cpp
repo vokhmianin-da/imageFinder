@@ -26,7 +26,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::slotDone(const QUrl &url, const QByteArray &ba)
+void MainWindow::slotDone(const QUrl &url, const QByteArray &ba)    //скачивание html-разметки
 {
     Q_UNUSED(url);
     htmlFile.setFileName("htmlFile.txt");
@@ -38,7 +38,7 @@ void MainWindow::slotDone(const QUrl &url, const QByteArray &ba)
     }
 }
 
-void MainWindow::slotNewPicture(const QUrl &url, const QByteArray &ba)
+void MainWindow::slotNewPicture(const QUrl &url, const QByteArray &ba)  //скачивание картинки
 {
     Q_UNUSED(url);
     static int n = 0;
@@ -84,7 +84,7 @@ void MainWindow::slotNewPicture(const QUrl &url, const QByteArray &ba)
     n++;
 }
 
-void MainWindow::on_pushButton_clicked()    //вывод картинок
+void MainWindow::on_pushButton_clicked()    //разбор файла с запросом, выделение адресов картинок и их вывод
 {
     if(htmlFile.fileName().isEmpty())
     {
@@ -124,7 +124,7 @@ void MainWindow::slotDownloadProgress(qint64 received, qint64 total)
 {
     //Странная хрень творится с размером
     if (total <=0){
-        slotError();
+        //slotError();
         return;
     }
 
@@ -136,7 +136,7 @@ void MainWindow::slotError()
     QMessageBox::critical(this, "Error", "An error while download is occured");
 }
 
-void MainWindow::slotReassignment() //новое соединение сигналов и слотов
+void MainWindow::slotReassignment() //новое соединение сигналов и слотов (для загрузки картинок)
 {
     disconnect(loader, SIGNAL(done(const QUrl&, const QByteArray&)),
                this, SLOT(slotDone(const QUrl&, const QByteArray&)));
@@ -145,7 +145,7 @@ void MainWindow::slotReassignment() //новое соединение сигна
             this, SLOT(slotNewPicture(const QUrl&, const QByteArray&)));
 }
 
-void MainWindow::slotAssignment()
+void MainWindow::slotAssignment()   //новое соединение сигналов и слотов (для загрузки html-разметки запроса)
 {
     disconnect(loader, SIGNAL(done(const QUrl&, const QByteArray&)),
                this, SLOT(slotNewPicture(const QUrl&, const QByteArray&)));
