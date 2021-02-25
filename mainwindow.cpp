@@ -36,6 +36,7 @@ void MainWindow::slotDone(const QUrl &url, const QByteArray &ba)    //скачи
         htmlFile.write(ba);
         htmlFile.close();
     }
+    ui->pbar->setValue(0); //сброс шкалы загрузки
 }
 
 void MainWindow::slotNewPicture(const QUrl &url, const QByteArray &ba)  //скачивание картинки
@@ -82,6 +83,7 @@ void MainWindow::slotNewPicture(const QUrl &url, const QByteArray &ba)  //ска
     default: n = -1; break;
     }
     n++;
+    ui->pbar->setValue(0); //сброс шкалы загрузки
 }
 
 void MainWindow::on_pushButton_clicked()    //разбор файла с запросом, выделение адресов картинок и их вывод
