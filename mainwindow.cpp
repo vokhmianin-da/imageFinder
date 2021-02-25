@@ -51,7 +51,7 @@ void MainWindow::slotNewPicture(const QUrl &url, const QByteArray &ba)  //ска
     //    }
     switch(n){
     case 0:
-        pictFile.setFileName("pict1.jpg");
+        pictFile.setFileName("pict1.png");
         pictFile.remove();
         if(pictFile.open(QIODevice::WriteOnly))
         {
@@ -61,7 +61,7 @@ void MainWindow::slotNewPicture(const QUrl &url, const QByteArray &ba)  //ска
         showPic(pictFile.fileName(), ui->label1);
         break;
     case 1:
-        pictFile.setFileName("pict2.jpg");
+        pictFile.setFileName("pict2.png");
         pictFile.remove();
         if(pictFile.open(QIODevice::WriteOnly))
         {
@@ -71,7 +71,7 @@ void MainWindow::slotNewPicture(const QUrl &url, const QByteArray &ba)  //ска
         showPic(pictFile.fileName(), ui->label2);
         break;
     case 2:
-        pictFile.setFileName("pict3.jpg");
+        pictFile.setFileName("pict3.png");
         pictFile.remove();
         if(pictFile.open(QIODevice::WriteOnly))
         {
@@ -173,7 +173,7 @@ void MainWindow::on_pushButtonSearch_clicked()  //установка имени 
     }
     else
     {
-       ui->errorLabel->clear();    //имя установлено
+       ui->errorLabel->setText("Имя запроса установлено");;    //имя установлено
     }
     emit assignment();
     request = ui->requestName->text();
