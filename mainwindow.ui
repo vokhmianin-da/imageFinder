@@ -22,6 +22,9 @@
         <property name="text">
          <string>Введите слово для поиска в интернете:</string>
         </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
        </widget>
       </item>
       <item>
@@ -30,36 +33,24 @@
       <item>
        <widget class="QPushButton" name="pushButtonSearch">
         <property name="text">
-         <string>Установить</string>
+         <string>Установить запрос</string>
         </property>
        </widget>
       </item>
      </layout>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <widget class="QLabel" name="label1">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label2">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label3">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-     </layout>
+     <spacer name="verticalSpacer_2">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -79,7 +70,7 @@
       <item>
        <widget class="QPushButton" name="pushButton">
         <property name="text">
-         <string>Показать</string>
+         <string>Показать картинки</string>
         </property>
        </widget>
       </item>
@@ -104,6 +95,19 @@
        <number>0</number>
       </property>
      </widget>
+    </item>
+    <item>
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
     </item>
     <item>
      <widget class="QLabel" name="errorLabel">

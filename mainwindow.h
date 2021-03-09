@@ -6,6 +6,7 @@
 #include <QTemporaryFile>
 #include <QLabel>
 #include "downloader.h"
+#include "showpictwindow.h"
 
 namespace Ui {
 class MainWindow;
@@ -18,9 +19,11 @@ class MainWindow : public QMainWindow
 private:
     Ui::MainWindow *ui;
     const QString requestTemplate = "https://yandex.ru/images/search?text=";
-    QString request = "кот";
+    QString request;
     QTemporaryFile htmlFile;
     QTemporaryFile pictFile[3];
+
+    showPictWindow *viewer; //окно для отображения картинок
 
     Downloader *loader;
 signals:

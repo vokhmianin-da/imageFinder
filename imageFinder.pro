@@ -14,9 +14,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    downloader.cpp
+    downloader.cpp \
+    showpictwindow.cpp
 
 HEADERS  += mainwindow.h \
-    downloader.h
+    downloader.h \
+    showpictwindow.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    showpictwindow.ui

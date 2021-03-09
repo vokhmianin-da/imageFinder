@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     loader = new Downloader;
+    viewer = new showPictWindow;
 
     connect(loader, SIGNAL(downloadProgress(qint64, qint64)),
             this, SLOT(slotDownloadProgress(qint64, qint64)));
@@ -46,7 +47,7 @@ void MainWindow::slotNewPicture(const QUrl &url, const QByteArray &ba)  //ска
             pictFile[n].write(ba);
             pictFile[n].close();
         }
-        showPic(pictFile[n].fileName(), ui->label1);
+        showPic(pictFile[n].fileName(), viewer->ptrLabel1());
         break;
     case 1:
         if(pictFile[n].open())
@@ -54,7 +55,7 @@ void MainWindow::slotNewPicture(const QUrl &url, const QByteArray &ba)  //ска
             pictFile[n].write(ba);
             pictFile[n].close();
         }
-        showPic(pictFile[n].fileName(), ui->label2);
+        showPic(pictFile[n].fileName(), viewer->ptrLabel2());
         break;
     case 2:
         if(pictFile[n].open())
@@ -62,9 +63,11 @@ void MainWindow::slotNewPicture(const QUrl &url, const QByteArray &ba)  //ска
             pictFile[n].write(ba);
             pictFile[n].close();
         }
-        showPic(pictFile[n].fileName(), ui->label3);
+        showPic(pictFile[n].fileName(), viewer->ptrLabel3());
         break;
-    default: n = -1; break;
+    default:
+        n = -1;
+        break;
     }
     n++;
     ui->pbar->setValue(0); //сброс шкалы загрузки
@@ -100,6 +103,9 @@ void MainWindow::on_pushButton_clicked()    //разбор файла с зап�
         loader->download(str1);
         str1 = "http:" + list[2];
         loader->download(str1);
+
+        viewer->show(); //вывод окна показа картинок
+        close();    //закрытие окна запроса
     }
 }
 
