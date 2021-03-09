@@ -12,8 +12,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     loader = new Downloader;
 
-    //    connect(loader, SIGNAL(done(const QUrl&, const QByteArray&)),
-    //            this, SLOT(slotDone(const QUrl&, const QByteArray&)));
     connect(loader, SIGNAL(downloadProgress(qint64, qint64)),
             this, SLOT(slotDownloadProgress(qint64, qint64)));
     connect(this, SIGNAL(reassignment()), this, SLOT(slotReassignment()));
@@ -29,9 +27,7 @@ MainWindow::~MainWindow()
 void MainWindow::slotDone(const QUrl &url, const QByteArray &ba)    //скачивание html-разметки
 {
     Q_UNUSED(url);
-    htmlFile.setFileName("htmlFile.txt");
-    htmlFile.remove();
-    if(htmlFile.open(QIODevice::WriteOnly))
+    if(htmlFile.open())
     {
         htmlFile.write(ba);
         htmlFile.close();
@@ -43,42 +39,30 @@ void MainWindow::slotNewPicture(const QUrl &url, const QByteArray &ba)  //ска
 {
     Q_UNUSED(url);
     static int n = 0;
-    //    pictFile.setFileName(url.path().section('/', -1));
-    //    if(pictFile.open(QIODevice::WriteOnly))
-    //    {
-    //        pictFile.write(ba);
-    //        pictFile.close();
-    //    }
     switch(n){
     case 0:
-        pictFile.setFileName("pict1.png");
-        pictFile.remove();
-        if(pictFile.open(QIODevice::WriteOnly))
+        if(pictFile[n].open())
         {
-            pictFile.write(ba);
-            pictFile.close();
+            pictFile[n].write(ba);
+            pictFile[n].close();
         }
-        showPic(pictFile.fileName(), ui->label1);
+        showPic(pictFile[n].fileName(), ui->label1);
         break;
     case 1:
-        pictFile.setFileName("pict2.png");
-        pictFile.remove();
-        if(pictFile.open(QIODevice::WriteOnly))
+        if(pictFile[n].open())
         {
-            pictFile.write(ba);
-            pictFile.close();
+            pictFile[n].write(ba);
+            pictFile[n].close();
         }
-        showPic(pictFile.fileName(), ui->label2);
+        showPic(pictFile[n].fileName(), ui->label2);
         break;
     case 2:
-        pictFile.setFileName("pict3.png");
-        pictFile.remove();
-        if(pictFile.open(QIODevice::WriteOnly))
+        if(pictFile[n].open())
         {
-            pictFile.write(ba);
-            pictFile.close();
+            pictFile[n].write(ba);
+            pictFile[n].close();
         }
-        showPic(pictFile.fileName(), ui->label3);
+        showPic(pictFile[n].fileName(), ui->label3);
         break;
     default: n = -1; break;
     }
@@ -97,14 +81,11 @@ void MainWindow::on_pushButton_clicked()    //разбор файла с зап�
     QString temp;
     QTextStream stream(&htmlFile);
     QStringList list;
-    if(htmlFile.open(QIODevice::ReadOnly))
+    if(htmlFile.open())
     {
         temp = stream.readAll();
         htmlFile.close();
-        // Проверить регулярку можно на сайте: https://regex101.com
 
-        //        <img class="related__thumb" alt="" data-error-handler="wizardThumbError:2" src="//im0-tub-ru.yandex.net/i?id=735d3bcb5413fde4f60e0dcd70b3fd2c&amp;n=11&amp;ref=rq">
-        //        QRegExp regex("(<img.*?src=\")([^\"]+)(\")"); //regex("<img([^(src)]+)src=\"([^(\")]+)\"")
         QRegExp regex("<img class=\"[^\"]+\" alt=\"[^\"]*\"[^\"]+\"[^\"]+\" src=\"([^\"]+);n");
         int lastPos = 0;
         int index = 0;
@@ -124,7 +105,6 @@ void MainWindow::on_pushButton_clicked()    //разбор файла с зап�
 
 void MainWindow::slotDownloadProgress(qint64 received, qint64 total)
 {
-    //Странная хрень творится с размером
     if (total <=0){
         //slotError();
         return;

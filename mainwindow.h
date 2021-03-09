@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include <QString>
-#include <QFile>
+#include <QTemporaryFile>
 #include <QLabel>
 #include "downloader.h"
 
@@ -19,8 +19,8 @@ private:
     Ui::MainWindow *ui;
     const QString requestTemplate = "https://yandex.ru/images/search?text=";
     QString request = "кот";
-    QFile htmlFile;
-    QFile pictFile;
+    QTemporaryFile htmlFile;
+    QTemporaryFile pictFile[3];
 
     Downloader *loader;
 signals:
